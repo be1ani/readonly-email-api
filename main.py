@@ -3,7 +3,7 @@ from enum import Enum
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 
-from gmail_client import GmailClient
+from fetch_emails import fetch_emails
 
 app = FastAPI(
     title="Gmail Inbox API",
@@ -36,8 +36,7 @@ def get_emails(
     - **n**: how many emails to return (1–500)
     - **status**: `all` | `read` | `unread`
     """
-    client = GmailClient()
-    emails = client.fetch_emails(n=n, status=status.value)
+    emails = fetch_emails(n=n, status=status.value)
     return JSONResponse(content={"count": len(emails), "status_filter": status, "emails": emails})
 
 
