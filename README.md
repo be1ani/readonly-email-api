@@ -2,13 +2,14 @@
 
 ![Gmail Read-Only](icon.png)
 
-A backend service that exposes a REST API for reading Gmail inbox emails over IMAP. No Google Cloud Console, no OAuth flow — just an App Password and you're done.
+A backend REST API service for reading emails from a Gmail inbox over IMAP. No Google Cloud Console, no OAuth flow — just an App Password and you're done.
 
 ---
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.10+
+- Docker (optional)
 - A Gmail account with 2-Step Verification enabled
 
 ---
@@ -18,7 +19,7 @@ A backend service that exposes a REST API for reading Gmail inbox emails over IM
 ### 1. Install dependencies
 
 ```bash
-pip install python-dotenv
+pip install -r requirements.txt
 ```
 
 ### 2. Generate a Gmail App Password
@@ -40,11 +41,13 @@ GMAIL_USER=you@gmail.com
 APP_PASSWORD=xxxx xxxx xxxx xxxx
 ```
 
-### 4. Run
+### 4. Start the server
 
 ```bash
-python fetch_emails.py
+uvicorn main:app --reload
 ```
+
+The API will be available at `http://localhost:8000` and interactive docs at `http://localhost:8000/docs`.
 
 ---
 
@@ -52,7 +55,7 @@ python fetch_emails.py
 
 ```bash
 docker build -t gmail-read-only .
-docker run --env-file .env gmail-read-only
+docker run --env-file .env -p 8000:8000 gmail-read-only
 ```
 
 Credentials are passed at runtime via `--env-file` and never baked into the image.
@@ -65,7 +68,6 @@ Credentials are passed at runtime via `--env-file` and never baked into the imag
 |---|---|---|---|
 | `GMAIL_USER` | `.env` | — | Your Gmail address |
 | `APP_PASSWORD` | `.env` | — | Your 16-character App Password |
-| `NUM_EMAILS` | `fetch_emails.py` | `10` | Number of recent emails to fetch |
 
 ---
 
